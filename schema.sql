@@ -30,43 +30,33 @@ CREATE TABLE employee(
     PRIMARY KEY (id)
 );
 
-INSERT INTO department (name) VALUES ("Accounting");
-INSERT INTO department (name) VALUES ("Legal");
-INSERT INTO department (name) VALUES ("Shipping");
-INSERT INTO department (name) VALUES ("Executive");
+INSERT INTO department (name) 
+VALUES 
+("Accounting"),("Legal"),("Shipping"), ("Executive");
 
 INSERT INTO role (title,salary,department_id) 
-VALUES ("CEO",250000,4);
-
-INSERT INTO role (title,salary,department_id) 
-VALUES ("Packer",50000,3);
+VALUES 
+	("CEO",250000,4),
+    ("Lawyer",100000,2),
+    ("Accountant",100000,1),
+	("Accounting manager",100000,1),
+	("Junior Accountant",70000,1),
+    ("Shipping manager",70000,3),
+	("Packer",50000,3);
 
 INSERT INTO employee (first_name,last_name,role_id,manager_id) 
-VALUES ("Joe","Smith",1,NULL);
+VALUES 
+	("Joe","Smith",1,NULL),
+    ("Wally","Accoutantboss",4,1),
+    ("Sally","Jones",3,2),
+	("Mike","packerboss",6,1),
+	("Steve","Smithson",7,4);
 
-INSERT INTO employee (first_name,last_name,role_id,manager_id) 
-VALUES ("Steve","Smithson",2,1);
-
-SELECT * FROM department;
-SELECT * FROM role;
-SELECT * FROM employee;
+-- SELECT * FROM department;
+-- SELECT * FROM role;
+-- SELECT * FROM employee;
 
 
--- Be explicit about the columns you select in a JOIN query */
-SELECT
-  employee.id AS employee_id,
-  employee.first_name AS first_name,
-  employee.last_name as last_name,
-  employee.role_id as role_id,
-  role.title as title,
-  role.salary as salary
-FROM
-  employee 
-  JOIN role ON employee.role_id = role.id
-WHERE
-  -- event.id = <event to find attendees for>
-
--- this is a select to show all info about each employee:  A triple join
 SELECT
   employee.id AS employee_id,
   employee.first_name AS first_name,
@@ -74,10 +64,26 @@ SELECT
   employee.role_id as role_id,
   role.title as title,
   role.salary as salary,
-  department.name as department
+  department.name as department,
+  CONCAT (m.first_name,' ',m.last_name) AS Manager
 FROM
-employee
-JOIN role ON employee.role_id = role.id
+employee 
+JOIN  role  ON employee.role_id = role.id
 JOIN department ON role.department_id=department.id
+LEFT JOIN employee m ON employee.manager_id=m.id
+
+-- for reference:
+
+Complete SELECT query
+SELECT DISTINCT column, AGG_FUNC(column_or_expression), …
+FROM mytable
+    JOIN another_table
+      ON mytable.column = another_table.column
+    WHERE constraint_expression
+    GROUP BY column
+    HAVING constraint_expression
+    ORDER BY column ASC/DESC
+    LIMIT count OFFSET COUNT;
+
 
 
